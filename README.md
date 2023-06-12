@@ -1,4 +1,4 @@
-# electron-webrtc
+# electron-webrtc-webtorrent
 
 [![npm version](https://img.shields.io/npm/v/electron-webrtc.svg)](https://www.npmjs.com/package/electron-webrtc)
 ## Status - unstable 
@@ -22,28 +22,12 @@ This module is compatible with [`simple-peer`](https://github.com/feross/simple-
 
 ## Usage
 
-`npm install electron-webrtc`
+`npm i electron-webrtc-webtorrent`
 
 ```js
 // call exported function to create Electron process
-var wrtc = require('electron-webrtc')()
-
-// handle errors that may occur when trying to communicate with Electron
-wrtc.on('error', function (err) { console.log(err) })
-
-// uses the same API as the `wrtc` package
-var pc = new wrtc.RTCPeerConnection(config)
-
-// compatible with `simple-peer`
-var peer = new SimplePeer({
-  initiator: true,
-  wrtc: wrtc
-})
-
-// listen for errors
-wrtc.on('error', function (err, source) {
-  console.error(err)
-})
+const wrtc = require('electron-webrtc')();
+global.WRTC = wrtc
 ```
 
 ### Methods
@@ -93,10 +77,11 @@ Or if you want to do it programmatically, initialize a new instance and pass in 
 var wrtc = require('electron-webrtc')({ headless: true })
 ```
 
-Now you may run your WebRTC code with `electron-webrtc` :)
+Now you may run your WebRTC code with `electron-webrtc-webtorrent` :)
 
 ## Related Modules
 
 - [`node-webrtc`](https://github.com/js-platform/node-webrtc)
 - [`node-rtc-peer-connection`](https://github.com/nickdesaulniers/node-rtc-peer-connection)
 - [`electron-eval`](https://github.com/mappum/electron-eval)
+- [`electron-webrtc`](https://github.com/mappum/electron-webrtc)
