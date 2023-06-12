@@ -1,9 +1,9 @@
-var EventEmitter = require('events').EventEmitter
-var electron = require('electron-eval')
+const EventEmitter = require('events').EventEmitter
+const electron = require('electron-eval')
 
 module.exports = function (opts) {
-  var daemon = electron(opts)
-  var wrtc = new EventEmitter()
+  const daemon = electron(opts)
+  const wrtc = new EventEmitter()
 
   return Object.assign(wrtc, {
     close: daemon.close.bind(daemon),

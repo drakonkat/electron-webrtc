@@ -1,7 +1,7 @@
 'use strict'
 
-var EventEmitter = require('events').EventEmitter
-var debug = require('debug')('RTCDC')
+const EventEmitter = require('events').EventEmitter
+const debug = require('debug')('RTCDC')
 
 module.exports = function (daemon, wrtc) {
   daemon.eval(`
@@ -72,7 +72,7 @@ module.exports = function (daemon, wrtc) {
     }
 
     _wrap (init) {
-      for (let k in init) {
+      for (const k in init) {
         this[k] = init[k]
       }
       this.stream = this.id
@@ -127,8 +127,8 @@ module.exports = function (daemon, wrtc) {
     }
 
     onMessage (message) {
-      var handler = this['on' + message.type]
-      var event = message.event || {}
+      const handler = this['on' + message.type]
+      const event = message.event || {}
 
       debug('<<', this.id, message.type, message, !!handler)
 
@@ -141,7 +141,7 @@ module.exports = function (daemon, wrtc) {
 
         case 'message':
           if (message.dataType === 'binary') {
-            var b = new Buffer(event.data, 'base64')
+            const b = new Buffer(event.data, 'base64')
             event.data = b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength)
           }
           break
@@ -162,7 +162,7 @@ module.exports = function (daemon, wrtc) {
     }
 
     send (data) {
-      var convert = ''
+      let convert = ''
       if (data instanceof ArrayBuffer || data instanceof Uint8Array) {
         data = toBuffer(data)
       }
@@ -202,6 +202,7 @@ module.exports = function (daemon, wrtc) {
     get bufferedAmountLowThreshold () {
       return this._bufferedAmountLowThreshold
     }
+
     set bufferedAmountLowThreshold (value) {
       this._bufferedAmountLowThreshold = value
       this._setProp('bufferedAmountLowThreshold', value)
@@ -210,6 +211,7 @@ module.exports = function (daemon, wrtc) {
     get binaryType () {
       return this._binaryType
     }
+
     set binaryType (value) {
       this._binaryType = value
       this._setProp('binaryType', value)
@@ -218,9 +220,9 @@ module.exports = function (daemon, wrtc) {
 }
 
 function toBuffer (ab) {
-  var buffer = new Buffer(ab.byteLength)
-  var view = new Uint8Array(ab)
-  for (var i = 0; i < buffer.length; ++i) {
+  const buffer = new Buffer(ab.byteLength)
+  const view = new Uint8Array(ab)
+  for (let i = 0; i < buffer.length; ++i) {
     buffer[i] = view[i]
   }
   return buffer

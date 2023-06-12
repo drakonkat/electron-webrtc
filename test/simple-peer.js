@@ -1,8 +1,8 @@
-var test = require('tap').test
-var Peer = require('simple-peer')
-var str = require('string-to-stream')
+const test = require('tap').test
+const Peer = require('simple-peer')
+const str = require('string-to-stream')
 
-var wrtc
+let wrtc
 test('create daemon', (t) => {
   wrtc = require('..')()
   wrtc.electronDaemon.once('ready', t.end)
@@ -11,7 +11,7 @@ test('create daemon', (t) => {
 // test/basic.js
 
 test('signal event gets emitted', function (t) {
-  var peer = new Peer({ initiator: true, wrtc })
+  const peer = new Peer({ initiator: true, wrtc })
   peer.once('signal', function () {
     t.pass('got signal event')
     peer.destroy()
@@ -20,16 +20,16 @@ test('signal event gets emitted', function (t) {
 })
 
 test('data send/receive text', function (t) {
-  var peer1 = new Peer({ initiator: true, wrtc })
-  var peer2 = new Peer({ wrtc })
+  const peer1 = new Peer({ initiator: true, wrtc })
+  const peer2 = new Peer({ wrtc })
 
-  var numSignal1 = 0
+  let numSignal1 = 0
   peer1.on('signal', function (data) {
     numSignal1 += 1
     peer2.signal(data)
   })
 
-  var numSignal2 = 0
+  let numSignal2 = 0
   peer2.on('signal', function (data) {
     numSignal2 += 1
     peer1.signal(data)
@@ -79,8 +79,8 @@ test('data send/receive text', function (t) {
 })
 
 test('sdpTransform function is called', function (t) {
-  var peer1 = new Peer({ initiator: true, wrtc })
-  var peer2 = new Peer({ sdpTransform: sdpTransform, wrtc })
+  const peer1 = new Peer({ initiator: true, wrtc })
+  const peer2 = new Peer({ sdpTransform, wrtc })
 
   function sdpTransform (sdp) {
     t.equal(typeof sdp, 'string', 'got a string as SDP')
@@ -104,8 +104,8 @@ test('sdpTransform function is called', function (t) {
 // test/binary.js
 
 test('data send/receive ArrayBuffer', function (t) {
-  var peer1 = new Peer({ wrtc, initiator: true })
-  var peer2 = new Peer({ wrtc })
+  const peer1 = new Peer({ wrtc, initiator: true })
+  const peer2 = new Peer({ wrtc })
   peer1.on('signal', function (data) {
     peer2.signal(data)
   })
@@ -147,8 +147,8 @@ test('data send/receive ArrayBuffer', function (t) {
 test('duplex stream: send data before "connect" event', function (t) {
   t.plan(9)
 
-  var peer1 = new Peer({ wrtc, initiator: true })
-  var peer2 = new Peer({ wrtc })
+  const peer1 = new Peer({ wrtc, initiator: true })
+  const peer2 = new Peer({ wrtc })
   peer1.on('signal', function (data) { if (!peer2.destroyed) peer2.signal(data) })
   peer2.on('signal', function (data) { if (!peer1.destroyed) peer1.signal(data) })
 
@@ -182,8 +182,8 @@ test('duplex stream: send data before "connect" event', function (t) {
 test('duplex stream: send data one-way', function (t) {
   t.plan(9)
 
-  var peer1 = new Peer({ wrtc, initiator: true })
-  var peer2 = new Peer({ wrtc })
+  const peer1 = new Peer({ wrtc, initiator: true })
+  const peer2 = new Peer({ wrtc })
   peer1.on('signal', function (data) { peer2.signal(data) })
   peer2.on('signal', function (data) { peer1.signal(data) })
   peer1.on('connect', tryTest)
@@ -223,16 +223,16 @@ test('duplex stream: send data one-way', function (t) {
 // test/trickle.js
 
 test('disable trickle', function (t) {
-  var peer1 = new Peer({ initiator: true, trickle: false, wrtc })
-  var peer2 = new Peer({ trickle: false, wrtc })
+  const peer1 = new Peer({ initiator: true, trickle: false, wrtc })
+  const peer2 = new Peer({ trickle: false, wrtc })
 
-  var numSignal1 = 0
+  let numSignal1 = 0
   peer1.on('signal', function (data) {
     numSignal1 += 1
     peer2.signal(data)
   })
 
-  var numSignal2 = 0
+  let numSignal2 = 0
   peer2.on('signal', function (data) {
     numSignal2 += 1
     peer1.signal(data)
@@ -272,16 +272,16 @@ test('disable trickle', function (t) {
 })
 
 test('disable trickle (only initiator)', function (t) {
-  var peer1 = new Peer({ initiator: true, trickle: false, wrtc })
-  var peer2 = new Peer({ wrtc })
+  const peer1 = new Peer({ initiator: true, trickle: false, wrtc })
+  const peer2 = new Peer({ wrtc })
 
-  var numSignal1 = 0
+  let numSignal1 = 0
   peer1.on('signal', function (data) {
     numSignal1 += 1
     peer2.signal(data)
   })
 
-  var numSignal2 = 0
+  let numSignal2 = 0
   peer2.on('signal', function (data) {
     numSignal2 += 1
     peer1.signal(data)
@@ -321,16 +321,16 @@ test('disable trickle (only initiator)', function (t) {
 })
 
 test('disable trickle (only receiver)', function (t) {
-  var peer1 = new Peer({ initiator: true, wrtc })
-  var peer2 = new Peer({ trickle: false, wrtc })
+  const peer1 = new Peer({ initiator: true, wrtc })
+  const peer2 = new Peer({ trickle: false, wrtc })
 
-  var numSignal1 = 0
+  let numSignal1 = 0
   peer1.on('signal', function (data) {
     numSignal1 += 1
     peer2.signal(data)
   })
 
-  var numSignal2 = 0
+  let numSignal2 = 0
   peer2.on('signal', function (data) {
     numSignal2 += 1
     peer1.signal(data)

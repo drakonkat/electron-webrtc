@@ -1,12 +1,12 @@
 'use strict'
 
-var hat = require('hat')
-var debug = require('debug')('RTCPC')
+const hat = require('hat')
+const debug = require('debug')('RTCPC')
 
 module.exports = function (daemon, wrtc) {
-  var RTCDataChannel = require('./RTCDataChannel.js')(daemon, wrtc)
+  const RTCDataChannel = require('./RTCDataChannel.js')(daemon, wrtc)
 
-  var i = 0
+  let i = 0
   daemon.eval('window.conns = {}', (err) => {
     if (err) wrtc.emit('error', err)
   })
@@ -129,8 +129,8 @@ module.exports = function (daemon, wrtc) {
     }
 
     onMessage (message) {
-      var handler = this['on' + message.type]
-      var event = message.event || {}
+      const handler = this['on' + message.type]
+      const event = message.event || {}
 
       debug(this._id + '<<', message.type, message, !!handler)
 
@@ -174,49 +174,65 @@ module.exports = function (daemon, wrtc) {
     }
 
     createDataChannel (label, options) {
-      var dc = new RTCDataChannel(this._id, label, options)
+      const dc = new RTCDataChannel(this._id, label, options)
       dc.once('init', () => this._dataChannels.set(dc.id, dc))
       return dc
     }
 
-    createOffer (cb, errCb, options) {
-      if (this._offer) return cb(this._offer)
-      return this._callRemote(
-        'createOffer',
-        `onSuccess, onFailure, ${JSON.stringify(options)}`,
-        (offer) => {
-          this._offer = offer
-          cb(offer)
-        }, errCb
-      )
+    async createOffer (options) {
+      return await new Promise((resolve, reject) => {
+        if (this._offer) {
+          return resolve(this._offer)
+        }
+        return this._callRemote(
+          'createOffer',
+          `onSuccess, onFailure, ${JSON.stringify(options)}`,
+          (offer) => {
+            this._offer = offer
+            resolve(offer)
+          }, (e) => {
+            reject(e)
+          }
+        )
+      })
     }
 
-    createAnswer (cb, errCb, options) {
-      if (this._answer) return cb(this._answer)
-      return this._callRemote(
-        'createAnswer',
-        `onSuccess, onFailure, ${JSON.stringify(options)}`,
-        (offer) => {
-          this._answer = offer
-          cb(offer)
-        }, errCb
-      )
+    async createAnswer (options) {
+      return new Promise((resolve, reject) => {
+        if (this._answer) {
+          return resolve(this._answer)
+        }
+        return this._callRemote(
+          'createAnswer',
+          `onSuccess, onFailure, ${JSON.stringify(options)}`,
+          (offer) => {
+            this._answer = offer
+            resolve(offer)
+          }, (e) => {
+            reject(e)
+          }
+        )
+      })
     }
 
-    setLocalDescription (desc, cb, errCb) {
-      this.localDescription = desc
-      this._callRemote(
-        'setLocalDescription',
-        `new RTCSessionDescription(${JSON.stringify(desc)}), onSuccess, onFailure`,
-        cb, errCb)
+    async setLocalDescription (desc, cb, errCb) {
+      await new Promise((resolve, reject) => {
+        this.localDescription = desc
+        this._callRemote(
+          'setLocalDescription',
+          `new RTCSessionDescription(${JSON.stringify(desc)}), onSuccess, onFailure`,
+          (o) => resolve(o), (e) => reject(e))
+      })
     }
 
-    setRemoteDescription (desc, cb, errCb) {
-      this.remoteDescription = desc
-      this._callRemote(
-        'setRemoteDescription',
-        `new RTCSessionDescription(${JSON.stringify(desc)}), onSuccess, onFailure`,
-        cb, errCb)
+    async setRemoteDescription (desc, cb, errCb) {
+      await new Promise((resolve, reject) => {
+        this.remoteDescription = desc
+        this._callRemote(
+          'setRemoteDescription',
+          `new RTCSessionDescription(${JSON.stringify(desc)}), onSuccess, onFailure`,
+          (o) => resolve(o), (e) => reject(e))
+      })
     }
 
     addIceCandidate (candidate, cb, errCb) {
@@ -251,8 +267,8 @@ module.exports = function (daemon, wrtc) {
           onSuccess(output)
         }
       `, (res) => {
-        for (let item of res) {
-          let stats = item.stats
+        for (const item of res) {
+          const stats = item.stats
           delete item.stats
           item.names = () => Object.keys(stats)
           item.stat = (name) => stats[name]
@@ -262,13 +278,13 @@ module.exports = function (daemon, wrtc) {
     }
 
     _eval (code, cb, errCb) {
-      var _resolve
-      var _reject
-      var promise = new Promise((resolve, reject) => {
+      let _resolve
+      let _reject
+      const promise = new Promise((resolve, reject) => {
         _resolve = resolve
         _reject = reject
       })
-      var reqId = hat()
+      const reqId = hat()
       daemon.once(reqId, (res) => {
         if (res.err && errCb) {
           errCb(res.err)

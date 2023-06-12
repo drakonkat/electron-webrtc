@@ -1,6 +1,6 @@
 {
-  "name": "electron-webrtc",
-  "version": "0.3.0",
+  "name": "electron-webrtc-webtorrent",
+  "version": "0.3.1",
   "description": "Use WebRTC in Node.js via a hidden Electron process",
   "main": "index.js",
   "browser": "browser.js",
@@ -14,19 +14,20 @@
   },
   "keywords": [
     "webrtc",
-    "electron"
+    "electron",
+    "webtorrent"
   ],
-  "author": "Matt Bell <mappum@gmail.com>",
+  "author": "Drakonkat <adamo.mazzocchetti@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "debug": "^2.2.0",
-    "electron-eval": "^0.9.0",
-    "get-browser-rtc": "^1.0.2",
+    "electron-eval": "^0.9.10",
+    "get-browser-rtc": "^1.1.0",
     "hat": "^0.0.3"
   },
   "devDependencies": {
-    "simple-peer": "^6.0.1",
-    "standard": "^7.0.0",
+    "simple-peer": "^9.11.1",
+    "standard": "^17.1.0",
     "string-to-stream": "^1.0.1",
     "tap": "^5.1.1"
   },
@@ -35,10 +36,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mappum/electron-webrtc.git"
+    "url": "git+https://github.com/drakonkat/electron-webrtc.git"
   },
   "bugs": {
-    "url": "https://github.com/mappum/electron-webrtc/issues"
+    "url": "https://github.com/drakonkat/electron-webrtc/issues"
   },
-  "homepage": "https://github.com/mappum/electron-webrtc#readme"
+  "homepage": "https://github.com/drakonkat/electron-webrtc#readme"
 }

@@ -1,8 +1,10 @@
 # electron-webrtc
 
 [![npm version](https://img.shields.io/npm/v/electron-webrtc.svg)](https://www.npmjs.com/package/electron-webrtc)
-[![Build Status](https://travis-ci.org/mappum/electron-webrtc.svg?branch=master)](https://travis-ci.org/mappum/electron-webrtc)
-[![Dependency Status](https://david-dm.org/mappum/electron-webrtc.svg)](https://david-dm.org/mappum/electron-webrtc)
+## Status - unstable 
+
+### FORKED from the original to update the RTCPeerConnections and make it work with webtorrent 
+
 
 Use WebRTC in Node.js via a hidden Electron process
 
