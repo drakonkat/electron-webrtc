@@ -23,7 +23,7 @@ module.exports = function (daemon, wrtc) {
       this.iceConnectionState = 'new'
       this.iceGatheringState = 'new'
       this.localDescription = null
-      this.peerIdentity = null // TODO: update this
+      this.peerIdentity = { catch:()=>{} } // TODO: update this
       this.remoteDescription = null
       this.signalingState = 'stable'
       daemon.on(`pc:${this._id}`, this.onMessage.bind(this))
