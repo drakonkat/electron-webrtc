@@ -23,7 +23,7 @@ module.exports = function (daemon, wrtc) {
       this.iceConnectionState = 'new'
       this.iceGatheringState = 'new'
       this.localDescription = null
-      this.peerIdentity = { catch:()=>{} } // TODO: update this
+      this.peerIdentity = { catch: () => {} } // TODO: update this
       this.remoteDescription = null
       this.signalingState = 'stable'
       daemon.on(`pc:${this._id}`, this.onMessage.bind(this))
@@ -225,21 +225,25 @@ module.exports = function (daemon, wrtc) {
       })
     }
 
-    async setRemoteDescription (desc, cb, errCb) {
+    async setRemoteDescription (desc) {
       await new Promise((resolve, reject) => {
-        this.remoteDescription = desc
         this._callRemote(
           'setRemoteDescription',
           `new RTCSessionDescription(${JSON.stringify(desc)}), onSuccess, onFailure`,
-          (o) => resolve(o), (e) => reject(e))
+          (o) => {
+            this.remoteDescription = desc;
+            resolve(o);
+          }, (e) => reject(e))
       })
     }
 
-    addIceCandidate (candidate, cb, errCb) {
-      this._callRemote(
-        'addIceCandidate',
-        `new RTCIceCandidate(${JSON.stringify(candidate)}), onSuccess, onFailure`,
-        cb, errCb)
+    async addIceCandidate (candidate) {
+      await new Promise((resolve, reject) => {
+        this._callRemote(
+          'addIceCandidate',
+          `new RTCIceCandidate(${JSON.stringify(candidate)}), onSuccess, onFailure`,
+          (o) => resolve(o), (e) => reject(e))
+      })
     }
 
     close () {

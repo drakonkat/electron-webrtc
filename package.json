@@ -1,6 +1,6 @@
 {
   "name": "electron-webrtc-webtorrent",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Use WebRTC in Node.js via a hidden Electron process",
   "main": "index.js",
   "browser": "browser.js",
