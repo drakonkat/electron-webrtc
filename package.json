@@ -1,6 +1,6 @@
 {
   "name": "electron-webrtc-webtorrent",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Use WebRTC in Node.js via a hidden Electron process",
   "main": "index.js",
   "browser": "browser.js",
@@ -21,15 +21,16 @@
   "license": "MIT",
   "dependencies": {
     "debug": "^2.2.0",
-    "electron-eval": "^0.9.10",
+    "electron": "^25.1.1",
     "get-browser-rtc": "^1.1.0",
-    "hat": "^0.0.3"
+    "hat": "^0.0.3",
+    "ndjson": "^1.5.0"
   },
   "devDependencies": {
     "simple-peer": "^9.11.1",
     "standard": "^17.1.0",
     "string-to-stream": "^1.0.1",
-    "tap": "^5.1.1"
+    "tap": "^10.7.0"
   },
   "directories": {
     "test": "test"

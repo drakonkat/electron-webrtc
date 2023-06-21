@@ -1,5 +1,5 @@
 const EventEmitter = require('events').EventEmitter
-const electron = require('electron-eval')
+const electron = require('./src/eval/src/index.js')
 
 module.exports = function (opts) {
   const daemon = electron(opts)
