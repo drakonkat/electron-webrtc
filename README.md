@@ -5,14 +5,16 @@
 
 ### FORKED from the original to update the RTCPeerConnections and make it work with webtorrent 
 
+#### TODO LIST
+- Upgrade electron and update all the method relative to WRTC
+- Improve stability
+- Test on linux, windows and mac
 
 Use WebRTC in Node.js via a hidden Electron process
 
 WebRTC is a powerful web API that lets browsers make peer-to-peer connections, and has already been
 deployed in [many popular browsers](http://caniuse.com/#feat=rtcpeerconnection). It may sometimes be
 useful to let Node.js programs use WebRTC, e.g. in [`webtorrent-hybrid`](https://github.com/feross/webtorrent-hybrid). However, the modules for WebRTC in Node ([`node-webrtc`](https://github.com/js-platform/node-webrtc) and [`node-rtc-peer-connection`](https://github.com/nickdesaulniers/node-rtc-peer-connection)) are either hard to install, broken, or incomplete.
-
-As a hack, this module talks to an invisible Electron instance in the background (using [`electron-eval`](https://github.com/mappum/electron-eval)) to use Chromium's built-in WebRTC implementation.
 
 ## Status
 
@@ -26,7 +28,7 @@ This module is compatible with [`simple-peer`](https://github.com/feross/simple-
 
 ```js
 // call exported function to create Electron process
-const wrtc = require('electron-webrtc')();
+wrtc = require('electron-webrtc-webtorrent')({electron: path.resolve(path.join(__dirname, "../node_modules/electron-webrtc-webtorrent/node_modules/electron/dist/electron.exe"))});
 global.WRTC = wrtc
 ```
 

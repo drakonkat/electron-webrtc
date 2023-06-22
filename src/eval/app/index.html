@@ -15,7 +15,6 @@
     try {
       res = eval(message.code)
     } catch (e) {
-      alert('Some error occured. Please check your code.')
       err = e.message
     }
     window.send(message.id, { res: res, err: err })

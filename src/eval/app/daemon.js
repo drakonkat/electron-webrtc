@@ -3,74 +3,77 @@ const {app, ipcMain, BrowserWindow} = electron
 const path = require('path')
 const json = require('ndjson')
 const ipc = ipcMain;
+
 if (app.dock) app.dock.hide()
+
 
 var timeout
 var options
 var window
 
 if (typeof process.send !== 'function') {
-  var stdin = json.parse()
-  process.stdin.pipe(stdin)
+    var stdin = json.parse()
+    process.stdin.pipe(stdin)
 
-  var stdout = json.serialize()
-  stdout.pipe(process.stdout)
+    var stdout = json.serialize()
+    stdout.pipe(process.stdout)
 
-  process.send = function (data) {
-    stdout.write(data)
-  }
-  stdin.on('data', function (data) {
-    process.emit('message', data)
-  })
+    process.send = function (data) {
+        stdout.write(data)
+    }
+    stdin.on('data', function (data) {
+        process.emit('message', data)
+    })
 }
 
 process.once('message', main)
 process.send('starting')
 
-function main (opts) {
-  options = opts
-  resetTimeout()
+function main(opts) {
+    options = opts
+    resetTimeout()
 
-  ipc.on('data', function (e, data) {
-    process.send(data)
-  })
+    ipc.on('data', function (e, data) {
+        process.send(data)
+    })
 
-  if (app.isReady()) createWindow()
-  else app.once('ready', createWindow)
+    if (app.isReady()) createWindow()
+    else app.once('ready', createWindow)
 }
 
-function createWindow () {
-  window = new BrowserWindow(options.windowOpts)
-  window.loadURL('file://' + path.join(__dirname, 'index.html'))
-  window.webContents.on('did-finish-load', function () {
-    process.on('message', onMessage)
-    process.send('ready')
-  })
-  window.once('close', function () {
-    process.removeListener('message', onMessage)
-    window = null
-  })
+function createWindow() {
+    window = new BrowserWindow(options.windowOpts)
+    window.loadURL('file://' + path.join(__dirname, 'index.html'))
+    window.webContents.on('did-finish-load', function () {
+        process.on('message', onMessage)
+        process.send('ready')
+    })
+    window.once('close', function () {
+        process.removeListener('message', onMessage)
+        window = null
+    })
 }
 
-function onMessage (message) {
-  resetTimeout()
-  if (typeof message !== 'object') return
-  if (message.opts.mainProcess) {
-    var res
-    var err
-    try {
-      res = eval(message.code) // eslint-disable-line
-    } catch (e) {
-      console.error("Fucking error shit: ", e)
-      err = e.stack
+function onMessage(message) {
+    resetTimeout()
+    if (typeof message !== 'object') return
+    if (message.opts.mainProcess) {
+        var res
+        var err
+        try {
+            res = eval(message.code) // eslint-disable-line
+        } catch (e) {
+            err = e.stack
+        }
+        process.send([message.id, {res: res, err: err}])
+    } else {
+        if (window) window.webContents.send('data', message)
     }
-    process.send([ message.id, { res: res, err: err } ])
-  } else {
-    if (window) window.webContents.send('data', message)
-  }
 }
 
-function resetTimeout () {
-  if (timeout) clearTimeout(timeout)
-  timeout = setTimeout(function () { process.exit(2) }, options.timeout)
+function resetTimeout() {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(function () {
+        process.exit(2)
+    }, options.timeout)
 }
